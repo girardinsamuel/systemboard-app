@@ -11,7 +11,9 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
     
-    {% block css %}{% endblock %}
+    {% block css %}
+    <link rel="stylesheet" href="/static/css/tailwind.css">
+    {% endblock %}
 </head>
 
 <body>
@@ -24,6 +26,7 @@
             {% endblock %}
         </div>
     </div>
+    <script src="/static/js/app.js" />
 </body>
 
 </html>

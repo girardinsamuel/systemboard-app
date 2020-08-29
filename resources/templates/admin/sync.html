@@ -1,0 +1,13 @@
+{% extends 'auth/base.html' %}
+
+{% block content %}
+{% if session().has('success') %}
+    <div class="alert alert-success">
+        {{ session().get('success') }}
+    </div>
+{% endif %}
+<form action="{{ route('admin.sync') }}" method="POST">
+    {{ csrf_field }}
+    <button type="Submit" class="bg-green-500 text-white p-4 rounded-md" >Sync problems</button>
+</form>
+{% endblock %}

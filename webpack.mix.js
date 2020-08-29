@@ -1,4 +1,4 @@
-let mix = require('laravel-mix');
+let mix = require("laravel-mix");
 
 /*
  |--------------------------------------------------------------------------
@@ -11,9 +11,12 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('storage/static/js/app.js', 'storage/compiled/js')
-    .sass('storage/static/sass/style.scss', 'storage/compiled/css');
+mix.js("storage/static/js/app.js", "storage/compiled/js/app.js");
 
+mix.postCss("resources/css/tailwind.css", "storage/static/css/tailwind.css", [
+  require("postcss-import"),
+  require("tailwindcss"),
+]);
 // Full API
 // mix.js(src, output);
 // mix.react(src, output); <-- Identical to mix.js(), but registers React Babel compilation.
