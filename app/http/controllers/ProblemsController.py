@@ -15,6 +15,17 @@ from app.Problem import Problem
 from app.Placement import Placement
 
 
+def get_color(role_id):
+    if role_id == 1:
+        return (0, 255, 0)
+    elif role_id == 2:
+        return (0, 0, 255)
+    elif role_id == 3:
+        return (255, 0, 0)
+    else:
+        return (248, 2, 252)
+
+
 class ProblemsController(Controller):
     """ProblemsController Controller Class."""
 
@@ -26,10 +37,13 @@ class ProblemsController(Controller):
         """
         self.request = request
         try:
-            self.pixels = neopixel.NeoPixel(board.D18, 30)
+            self.pixels = neopixel.NeoPixel(board.D18, 30, brightness=0.3)
         except:
             pass
-
+        self.indexes = list(range(43)) + list([None]*18)
+        for i in range(1, 11):
+            self.indexes += list(range(25+i*18, 25+(i+1)*18)) + list([None]*18)
+        
     def show(self, view: InertiaResponse):
         problems = Problem.all().take(300)
         return view.render("Problems", {"problems": problems.serialize()})
@@ -78,14 +92,30 @@ class ProblemsController(Controller):
         )
 
     def toggle_light(self, view: InertiaResponse):
+        should_light = self.request.input("light")
+        try:
+            self.pixels.fill((0, 0, 0))
+        except:
+            print("Error lighting ! or not on a RPI")
+        if not should_light:
+            return view.render("Problem")
+
         problem = Problem.find(int(self.request.param("id")))
         # get placements
         placements = json.loads(problem.placements)
         placements_id = [p["placement_id"] for p in placements]
         placements = Placement.all().filter(lambda p: p.id in placements_id)
-
+        problem_placements = json.loads(problem.placements)
         print("Light : ", [placement.position for placement in placements])
-        for pos in [placement.position for placement in placements]:
-            self.pixels[pos] = (255, 255, 0)
+        for index, placement in enumerate(placements.all()):
+            role_id = problem_placements[index]["role_id"]
+            color = get_color(role_id)
+            try:
+                real_position = self.indexes[placement.position]
+                print(real_position, placement.position, color)
+                if real_position:
+                    self.pixels[real_position] = color
+            except:
+                pass
         self.pixels.show()
         return view.render("Problem")

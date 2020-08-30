@@ -3,7 +3,7 @@
     <div class="px-2 mx-auto max-w-7xl sm:px-4 lg:px-8">
       <div class="relative flex items-center justify-around h-12">
         <button
-          class="p-1 border-2 border-transparent rounded-full transition duration-150 ease-in-out focus:outline-none "
+          class="p-1 transition duration-150 ease-in-out border-2 border-transparent rounded-full focus:outline-none "
           :class="isLit ? 'text-yellow-500  bg-gray-100' : 'text-gray-400'"
           @click="toggleLight"
         >
@@ -16,7 +16,7 @@
         </button>
 
         <button
-          class="p-1 border-2 border-transparent rounded-full transition duration-150 ease-in-out focus:outline-none "
+          class="p-1 transition duration-150 ease-in-out border-2 border-transparent rounded-full focus:outline-none "
           :class="isLiked ? 'text-red-500  bg-gray-100' : 'text-gray-400'"
         >
           <svg
@@ -35,7 +35,7 @@
           </svg>
         </button>
         <button
-          class="p-1 text-gray-400 border-2 border-transparent rounded-full transition duration-150 ease-in-out hover:text-gray-300 focus:outline-none focus:text-gray-500 focus:bg-gray-100"
+          class="p-1 text-gray-400 transition duration-150 ease-in-out border-2 border-transparent rounded-full hover:text-gray-300 focus:outline-none focus:text-gray-500 focus:bg-gray-100"
         >
           <svg
             class="w-6 h-6"
@@ -53,7 +53,7 @@
           </svg>
         </button>
         <button
-          class="p-1 text-gray-400 border-2 border-transparent rounded-full transition duration-150 ease-in-out hover:text-gray-300 focus:outline-none focus:text-gray-500 focus:bg-gray-100"
+          class="p-1 text-gray-400 transition duration-150 ease-in-out border-2 border-transparent rounded-full hover:text-gray-300 focus:outline-none focus:text-gray-500 focus:bg-gray-100"
         >
           <svg
             class="w-6 h-6"
@@ -71,7 +71,7 @@
           </svg>
         </button>
         <button
-          class="p-1 text-gray-400 border-2 border-transparent rounded-full transition duration-150 ease-in-out hover:text-gray-300 focus:outline-none focus:text-gray-500 focus:bg-gray-100"
+          class="p-1 text-gray-400 transition duration-150 ease-in-out border-2 border-transparent rounded-full hover:text-gray-300 focus:outline-none focus:text-gray-500 focus:bg-gray-100"
         >
           <svg
             class="w-6 h-6"
@@ -111,7 +111,9 @@ export default {
     toggleLight() {
       this.isLit = !this.isLit;
       console.log(`light ${this.problem.title} ${this.isLit ? "on" : "off"}`);
-      this.$inertia.post(`/problems/${this.problem.id}/light`)
+      this.$inertia.post(`/problems/${this.problem.id}/light`, {
+        light: this.isLit,
+      });
     },
   },
 };
