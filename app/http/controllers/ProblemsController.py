@@ -4,8 +4,12 @@ from masonite.request import Request
 from masonite.view import View
 from masonite.controllers import Controller
 from masonite.inertia import InertiaResponse
-import board
-import neopixel
+
+try:
+    import board
+    import neopixel
+except:
+    print("not on a RPI, skipping importing board")
 
 from app.Problem import Problem
 from app.Placement import Placement
@@ -21,21 +25,35 @@ class ProblemsController(Controller):
             request {masonite.request.Request} -- The Masonite Request class.
         """
         self.request = request
-        self.pixels = neopixel.NeoPixel(board.D18, 30)
+        try:
+            self.pixels = neopixel.NeoPixel(board.D18, 30)
+        except:
+            pass
 
     def show(self, view: InertiaResponse):
         problems = Problem.all().take(300)
         return view.render("Problems", {"problems": problems.serialize()})
 
     def single(self, view: InertiaResponse):
-        problem = Problem.find(self.request.param("id"))
+        problem = Problem.find(int(self.request.param("id")))
         # get placements
-        placements_id = [p["placement_id"] for p in problem.placements]
+        placements_json = json.loads(problem.placements)
+        placements_id = [p["placement_id"] for p in placements_json]
         placements = Placement.all().filter(lambda p: p.id in placements_id)
         problem_data = problem.serialize()
+        problem_data["placements"] = json.loads(problem_data["placements"])
         for pl in problem_data["placements"]:
             try:
-                pl["coords"] = placements.where("id", pl["placement_id"]).first().coords
+                pl["coords"] = json.loads(
+                    placements.where("id", pl["placement_id"]).first().coords
+                )
+
+                #         "coords": placements.where("id", pl["placement_id"])
+                #         .first()
+                #         .coords,
+                #     }
+                # )
+
             except:
                 pass
             # pl['placement'] = placements[]
@@ -60,9 +78,10 @@ class ProblemsController(Controller):
         )
 
     def toggle_light(self, view: InertiaResponse):
-        problem = Problem.find(self.request.param("id"))
+        problem = Problem.find(int(self.request.param("id")))
         # get placements
-        placements_id = [p["placement_id"] for p in problem.placements]
+        placements = json.loads(problem.placements)
+        placements_id = [p["placement_id"] for p in placements]
         placements = Placement.all().filter(lambda p: p.id in placements_id)
 
         print("Light : ", [placement.position for placement in placements])
