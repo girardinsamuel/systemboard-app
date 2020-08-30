@@ -37,7 +37,7 @@ class ProblemsController(Controller):
         """
         self.request = request
         try:
-            self.pixels = neopixel.NeoPixel(board.D18, 30, brightness=0.3)
+            self.pixels = neopixel.NeoPixel(board.D18, 220, brightness=0.3)
         except:
             pass
         self.indexes = list(range(43)) + list([None]*18)
