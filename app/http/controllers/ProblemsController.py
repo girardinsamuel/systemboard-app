@@ -40,10 +40,13 @@ class ProblemsController(Controller):
             self.pixels = neopixel.NeoPixel(board.D18, 220, brightness=0.3)
         except:
             pass
-        self.indexes = list(range(43)) + list([None]*18)
-        for i in range(1, 11):
-            self.indexes += list(range(25+i*18, 25+(i+1)*18)) + list([None]*18)
-        
+        self.indexes = list(range(23))
+        for i in range(0, 11):
+            col = list(range(23 + i * 18, 23 + (i + 1) * 18))
+            if i % 2 != 0:
+                col.reverse()
+            self.indexes += col + list([None] * 17)
+
     def show(self, view: InertiaResponse):
         problems = Problem.all().take(300)
         return view.render("Problems", {"problems": problems.serialize()})
