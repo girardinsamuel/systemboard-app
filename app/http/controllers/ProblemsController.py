@@ -110,12 +110,20 @@ class ProblemsController(Controller):
         placements = Placement.all().filter(lambda p: p.id in placements_id)
         problem_placements = json.loads(problem.placements)
         print("Light : ", [placement.position for placement in placements])
+        import pdb
+
+        pdb.set_trace()
         for index, placement in enumerate(placements.all()):
             role_id = problem_placements[index]["role_id"]
             color = get_color(role_id)
             try:
-                real_position = self.indexes[placement.position]
-                print(real_position, placement.position, color)
+                real_position = self.indexes[placement.mirrored_position + 1]
+                print(
+                    real_position,
+                    placement.mirrored_position + 1,
+                    placement.position + 1,
+                    color,
+                )
                 if real_position:
                     self.pixels[real_position] = color
             except:
