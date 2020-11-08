@@ -94,7 +94,7 @@ class ProblemsController(Controller):
         should_light = self.request.input("light")
         try:
             strip = Adafruit_NeoPixel(220, 18)
-            strip.setBrightness(40)
+            strip.setBrightness(10)
             strip.begin()
         except:
             print("Error lighting ! or not on a RPI")
@@ -113,15 +113,15 @@ class ProblemsController(Controller):
         problem_placements = json.loads(problem.placements)
         #print("Light : ", [placement.position for placement in placements])
         for index, placement in enumerate(placements.all()):
-            real_position = self.indexes[placement.mirrored_position]
-            print(real_position, placement.position, placement.mirrored_position)
+            real_position = self.indexes[placement.mirrored_position + 1]
+            print(real_position, placement.position + 1, placement.mirrored_position +1)
             if real_position is not None:
                 role_id = problem_placements[index]["role_id"]
                 color = get_color(role_id)
                 print(role_id)
             try:
                 #pixels[real_position - 1] = color
-                strip.setPixelColor(real_position, color)
+                strip.setPixelColor(real_position-1, color)
             except:
                 print("not on a RPI OR light led error")
                 pass
