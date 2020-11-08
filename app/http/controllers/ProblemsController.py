@@ -111,6 +111,7 @@ class ProblemsController(Controller):
         placements_id = [p["placement_id"] for p in placements]
         placements = Placement.all().filter(lambda p: p.id in placements_id)
         problem_placements = json.loads(problem.placements)
+
         #print("Light : ", [placement.position for placement in placements])
         for index, placement in enumerate(placements.all()):
             real_position = self.indexes[placement.mirrored_position + 1]
@@ -120,7 +121,6 @@ class ProblemsController(Controller):
                 color = get_color(role_id)
                 print(role_id)
             try:
-                #pixels[real_position - 1] = color
                 strip.setPixelColor(real_position-1, color)
             except:
                 print("not on a RPI OR light led error")
